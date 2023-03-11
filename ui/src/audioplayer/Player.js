@@ -314,12 +314,6 @@ const Player = () => {
     [audioInstance, playerState]
   )
 
-  useEffect(() => {
-    if (isMobilePlayer && audioInstance) {
-      audioInstance.volume = 1
-    }
-  }, [isMobilePlayer, audioInstance])
-
   return (
     <ThemeProvider theme={createMuiTheme(theme)}>
       <ReactJkMusicPlayer
