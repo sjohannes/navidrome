@@ -9,18 +9,13 @@ import config from '../config'
 
 const ArtistExternalLinks = ({ artistInfo, record }) => {
   const translate = useTranslate()
-  let links = []
   let linkButtons = []
-  const lastFMlink = artistInfo?.biography?.match(
-    /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/
-  )
 
-  if (lastFMlink) {
-    links.push(lastFMlink[2])
-  }
-  if (artistInfo && artistInfo.musicBrainzId) {
-    links.push(`https://musicbrainz.org/artist/${artistInfo.musicBrainzId}`)
-  }
+  const lastFMLink = config.lastFMEnabled && artistInfo?.biography?.match(
+    /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/
+  )?.[2];
+  const musicBrainzLink = artistInfo?.musicBrainzId
+    && `https://musicbrainz.org/artist/${artistInfo.musicBrainzId}`;
 
   const addLink = (url, title, icon) => {
     const translatedTitle = translate(title)
@@ -37,17 +32,16 @@ const ArtistExternalLinks = ({ artistInfo, record }) => {
     linkButtons.push(<span key={`link-${record.id}-${id}`}>{link}</span>)
   }
 
-  if (config.lastFMEnabled) {
+  lastFMLink &&
     addLink(
-      links[0],
+      lastFMLink,
       'message.openIn.lastfm',
       <ImLastfm2 className="lastfm-icon" />
     )
-  }
 
-  artistInfo?.musicBrainzId &&
+  musicBrainzLink &&
     addLink(
-      links[1],
+      musicBrainzLink,
       'message.openIn.musicbrainz',
       <MusicBrainz className="musicbrainz-icon" />
     )
